@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
-import { CssBaseline, Button, Grid, Box, Typography } from '@material-ui/core';
+import { Button, Grid, Box, Typography } from '@material-ui/core';
 import FilmesApi from './api/FilmesApi';
 import Layout from './components/layout/Layout';
 import Filmes from './components/ui/Filmes';
 import Filme from './components/ui/Filme';
 import FilmesSelecionado from './components/ui/FilmesSelecionado';
-import Resultados from './components/ui/Resultados'
 
 class App extends React.Component {
   state = {
