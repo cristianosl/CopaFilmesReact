@@ -6,8 +6,9 @@ export default class BaseApi {
       baseURL: "http://localhost:62956/api",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
-      }
+        "Accept": "application/json"
+      },
+      crossdomain: true
     });
   }
 }

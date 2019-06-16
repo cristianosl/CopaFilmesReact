@@ -1,81 +1,50 @@
 import React from 'react';
 import './App.css';
-import { Button, Grid, Box, Typography } from '@material-ui/core';
-import FilmesApi from './api/FilmesApi';
 import Layout from './components/layout/Layout';
-import Filmes from './components/ui/Filmes';
-import Filme from './components/ui/Filme';
-import FilmesSelecionado from './components/ui/FilmesSelecionado';
+import FilmesPage from './components/pages/FilmesPage';
+import ResultadosPage from './components/pages/ResultadosPage';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import FilmesApi from './api/FilmesApi';
+
+// import { Link } from 'react-router-dom';
+// const LinkResultados = React.forwardRef((props, ref) => (
+//   <Link innerRef={ref} to="/resultados/" {...props} />
+// ));
+
 
 class App extends React.Component {
   state = {
-    filmesLimite: 8,
-    filmes: [],
     filmesSelecionados: []
   }
-  componentDidMount() {
+  onClickGerarCampeonato(filmesSelecionados) {
+
+    const ids = filmesSelecionados.map(filme => {
+      return filme.id;
+    });
+
     const filmesApi = new FilmesApi();
     filmesApi
-      .listar()
-      .then(response => {
+      .gerarCampeonato(ids)
+      .then(filmes => {
         this.setState({
-          filmes: response.data
+          filmesSelecionados: filmes
         });
       }).catch(error => {
+        console.log("ocorreram erros ao tentar gerar o campeonato");
         console.log(error);
+        this.setState({
+          filmesSelecionados: []
+        });
       });
-  }
-  handleFilmeChange(o) {
-    // console.log('o.value', o.value);
-    // console.log('o.checked', o.checked);
-    let novosFilmesSelecionados = this.state.filmesSelecionados;
-    // Caso esteja marcado, inclui na lista de filmes
-    if (o.checked && this.state.filmesSelecionados.length < this.state.filmesLimite) {
-      let filmeSelecionado = this.state.filmes.find(filme => filme.id === o.value);
-      // let novosFilmesSelecionados = this.state.filmesSelecionados;
-      novosFilmesSelecionados.push(filmeSelecionado)
-      this.setState({
-        filmesSelecionados: novosFilmesSelecionados
-      });
-
-      // Caso contrário, remove
-    } else if(o.checked === false) {
-      novosFilmesSelecionados = this.state.filmesSelecionados.filter(filme => filme.id !== o.value);
-    }
-    this.setState({
-      filmesSelecionados: novosFilmesSelecionados
-    });
   }
   render() {
     return (
       <React.Fragment>
         <Layout>
-          <div className="header-campeonatos">
-            <Typography variant="h3" component="h1">Campeonato de filmes</Typography>
-            <h2>Fase de Seleção</h2>
-            <p className="selecione-filmes">Selecione {this.state.filmesLimite} filmes que você deseja que entrem na competição e depois pressione o botão "Gerar Meu Campeonato" para prosseguir.</p>
-          </div>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <Box textAlign="left">
-                <FilmesSelecionado numSelecionados={this.state.filmesSelecionados.length} numTotal={this.state.filmesLimite} />
-              </Box>
-            </Grid>
-            <Grid item xs={6}>
-              <Box textAlign="right">
-                <Button variant="contained" className="btn-gerar-meu-campeonato">
-                  Gerar meu campeonato
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-          <Filmes>
-            {this.state.filmes.map(filme => {
-              return (
-                <Filme filme={filme} key={filme.id} onChange={this.handleFilmeChange.bind(this)} bloquearSelecao={this.state.filmesSelecionados.length >= this.state.filmesLimite} />
-              )
-            })}
-          </Filmes>
+          <Router>
+            <Route path="/" exact component={props => <FilmesPage {...props} onClickGerarCampeonato={this.onClickGerarCampeonato.bind(this)} />} />
+            <Route path="/resultados/" component={props => <ResultadosPage {...props} filmesSelecionados={this.state.filmesSelecionados} />} />
+          </Router>
         </Layout>
       </React.Fragment>
     );

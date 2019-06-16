@@ -25,3 +25,26 @@ body{
 .btn-gerar-meu-campeonato{
   background-color: #A7A7A8;
 }
+
+.finalistas {
+  height: 80px;
+  background-color: white;
+  margin-bottom: 20px;
+  align-items: center;
+  font-size: 22px;
+}
+
+.posicao{
+  background-color: #6E6E6E;
+  color: white;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.nome-filme {
+  padding-left: 40px;
+}
